@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import LikeButton from './LikeButton'
 
 interface SlideImage {
   src: string
@@ -10,17 +9,12 @@ interface SlideImage {
   id: string
 }
 
-const images: SlideImage[] = [
-  { src: '/fisidian.png', caption: 'Slide 1', id: 'slide1' },
-  { src: '/fisidi.jpg', caption: 'Slide 2', id: 'slide2' },
-  { src: '/ethereum.png', caption: 'Slide 3', id: 'slide3' },
-]
-
 interface ImageSliderProps {
-  onSlideChange?: (imageId: string) => void
+  images: SlideImage[]
+  onSlideChange?: (imageId: string) => void;
 }
 
-const ImageSlider = ({ onSlideChange }: ImageSliderProps) => {
+const ImageSlider = ({ images, onSlideChange }: ImageSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isTouching, setIsTouching] = useState(false)
@@ -74,10 +68,6 @@ const ImageSlider = ({ onSlideChange }: ImageSliderProps) => {
     }
     return undefined
   }, [nextSlide, isTouching])
-
-  useEffect(() => {
-    onSlideChange?.(images[currentSlide].id)
-  }, [currentSlide, onSlideChange])
 
   return (
     <div className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl">

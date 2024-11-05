@@ -9,15 +9,17 @@ interface LikeButtonProps {
 }
 
 const LikeButton = ({ imageId, initialLikes = 0, onLike }: LikeButtonProps) => {
-  const [likes, setLikes] = useState<number>(initialLikes)
-  const [isLiked, setIsLiked] = useState(false)
+  const [likes, setLikes] = useState<number | null>(null)
+  const [isLiked, setIsLiked] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem(`liked-${imageId}`)
+    }
+    return false
+  })
   const [isAnimating, setIsAnimating] = useState(false)
 
+  // Fetch initial likes count when component mounts
   useEffect(() => {
-    // Check localStorage after component mounts
-    setIsLiked(!!localStorage.getItem(`liked-${imageId}`))
-    
-    // Fetch initial likes count
     fetch(`/api/likes?imageId=${imageId}`)
       .then(res => res.json())
       .then(data => setLikes(data.likes || 0))

@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { upload } from '@vercel/blob/client'
 
-const UploadButton = () => {
+interface UploadButtonProps {
+  onUploadSuccess?: (url: string, id: string) => void;
+}
+
+const UploadButton = ({ onUploadSuccess }: UploadButtonProps) => {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -22,8 +26,8 @@ const UploadButton = () => {
         handleUploadUrl: '/api/upload',
       })
 
-      console.log('Upload successful:', blob)
       setUploadSuccess(blob.url)
+      onUploadSuccess?.(blob.url, blob.url)
     } catch (error: any) {
       console.error('Error uploading file:', error)
       setUploadError(error.message || 'Upload failed')
