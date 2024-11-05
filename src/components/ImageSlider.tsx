@@ -16,7 +16,11 @@ const images: SlideImage[] = [
   { src: '/ethereum.png', caption: 'Slide 3', id: 'slide3' },
 ]
 
-const ImageSlider = () => {
+interface ImageSliderProps {
+  onSlideChange?: (imageId: string) => void
+}
+
+const ImageSlider = ({ onSlideChange }: ImageSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isTouching, setIsTouching] = useState(false)
@@ -70,6 +74,10 @@ const ImageSlider = () => {
     }
     return undefined
   }, [nextSlide, isTouching])
+
+  useEffect(() => {
+    onSlideChange?.(images[currentSlide].id)
+  }, [currentSlide, onSlideChange])
 
   return (
     <div className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl">

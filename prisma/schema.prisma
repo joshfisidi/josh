@@ -1,10 +1,18 @@
+datasource db {
+  provider = "postgresql" // or "sqlite", depending on your setup
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  createdAt DateTime @default(now())
+
+  likes     Like[]
 }
 
 model Like {
@@ -12,5 +20,7 @@ model Like {
   imageId   String
   createdAt DateTime @default(now())
 
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
   @@index([imageId])
-} 
+}

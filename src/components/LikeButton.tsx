@@ -4,27 +4,24 @@ import { useState, useEffect } from 'react'
 
 interface LikeButtonProps {
   imageId: string
+  initialLikes?: number
+  onLike?: (likes: number) => void
 }
 
-const LikeButton = ({ imageId }: LikeButtonProps) => {
-  const [likes, setLikes] = useState(0)
+const LikeButton = ({ imageId, initialLikes = 0, onLike }: LikeButtonProps) => {
+  const [likes, setLikes] = useState<number>(initialLikes)
   const [isLiked, setIsLiked] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
-    const fetchLikes = async () => {
-      try {
-        const res = await fetch(`/api/likes?imageId=${imageId}`)
-        if (!res.ok) throw new Error('Failed to fetch likes')
-        const data = await res.json()
-        setLikes(data.likes)
-        const liked = localStorage.getItem(`liked-${imageId}`)
-        if (liked) setIsLiked(true)
-      } catch (error) {
-        console.error('Error fetching likes:', error)
-      }
-    }
-    fetchLikes()
+    // Check localStorage after component mounts
+    setIsLiked(!!localStorage.getItem(`liked-${imageId}`))
+    
+    // Fetch initial likes count
+    fetch(`/api/likes?imageId=${imageId}`)
+      .then(res => res.json())
+      .then(data => setLikes(data.likes || 0))
+      .catch(error => console.error('Error fetching likes:', error))
   }, [imageId])
 
   const handleLike = async () => {
