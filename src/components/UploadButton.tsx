@@ -27,7 +27,11 @@ const UploadButton = ({ onUploadSuccess }: UploadButtonProps) => {
       })
 
       setUploadSuccess(blob.url)
-      onUploadSuccess?.(blob.url, blob.url)
+      if (blob.imageId) {
+        onUploadSuccess?.(blob.url, blob.imageId)
+      } else {
+        onUploadSuccess?.(blob.url, blob.url)
+      }
     } catch (error: any) {
       console.error('Error uploading file:', error)
       setUploadError(error.message || 'Upload failed')

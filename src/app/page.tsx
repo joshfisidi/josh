@@ -3,7 +3,7 @@
 import ImageSlider from '@/components/ImageSlider'
 import LikeButton from '@/components/LikeButton'
 import UploadButton from '@/components/UploadButton'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface SlideImage {
   src: string
@@ -12,12 +12,25 @@ interface SlideImage {
 }
 
 export default function Home() {
-  const [currentImageId, setCurrentImageId] = useState('slide1')
-  const [images, setImages] = useState<SlideImage[]>([
-    { src: '/fisidian.png', caption: 'Slide 1', id: 'slide1' },
-    { src: '/fisidi.jpg', caption: 'Slide 2', id: 'slide2' },
-    { src: '/freek.png', caption: 'Slide 3', id: 'slide3' },
-  ])
+  const [currentImageId, setCurrentImageId] = useState<string | null>(null)
+  const [images, setImages] = useState<SlideImage[]>([])
+
+  // Fetch images from the database
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await fetch('/api/images')
+        const data = await res.json()
+        setImages(data.images)
+        if (data.images.length > 0) {
+          setCurrentImageId(data.images[0].id)
+        }
+      } catch (error) {
+        console.error('Error fetching images:', error)
+      }
+    }
+    fetchImages()
+  }, [])
 
   const handleUploadSuccess = (url: string, id: string) => {
     setImages(prev => [...prev, {
@@ -25,21 +38,24 @@ export default function Home() {
       caption: `Uploaded Image ${prev.length + 1}`,
       id
     }])
+    setCurrentImageId(id)
   }
 
   return (
-    <main>
+    <main className="flex flex-col items-center justify-center p-4">
       <ImageSlider 
         images={images}
         onSlideChange={setCurrentImageId} 
       />
-      <LikeButton 
-        imageId={currentImageId}
-        onLike={(likes: number) => {
-          console.log(`Image ${currentImageId} now has ${likes} likes`)
-        }}
-      />
-      <UploadButton onUploadSuccess={handleUploadSuccess} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full max-w-md">
+        <LikeButton 
+          imageId={currentImageId}
+          onLike={(likes: number) => {
+            console.log(`Image ${currentImageId} now has ${likes} likes`)
+          }}
+        />
+        <UploadButton onUploadSuccess={handleUploadSuccess} />
+      </div>
     </main>
   )
 }

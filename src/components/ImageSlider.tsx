@@ -70,7 +70,7 @@ const ImageSlider = ({ images, onSlideChange }: ImageSliderProps) => {
   }, [nextSlide, isTouching])
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl">
+    <div className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl mb-16">
       {/* Background blur layer */}
       {images.map((image, index) => (
         <div
