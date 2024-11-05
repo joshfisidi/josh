@@ -27,7 +27,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           });
           console.log(`Image saved to database with ID: ${newImage.id} and URL: ${blob.url}`);
           // Append the image ID to the blob response
-          jsonResponse.imageId = newImage.id;
+          (jsonResponse as any).imageId = newImage.id;
         } catch (dbError) {
           console.error('Error saving image to database:', dbError);
           // Optionally, you can delete the uploaded blob if DB save fails

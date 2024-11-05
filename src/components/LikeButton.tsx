@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react'
 
 interface LikeButtonProps {
   imageId: string
-  initialLikes?: number
   onLike?: (likes: number) => void
 }
 
-const LikeButton = ({ imageId, initialLikes = 0, onLike }: LikeButtonProps) => {
+const LikeButton = ({ imageId, onLike }: LikeButtonProps) => {
   const [likes, setLikes] = useState<number | null>(null)
   const [isLiked, setIsLiked] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -46,6 +45,7 @@ const LikeButton = ({ imageId, initialLikes = 0, onLike }: LikeButtonProps) => {
       
       const data = await res.json()
       setLikes(data.likes)
+      onLike?.(data.likes)
       setIsLiked(!isLiked)
 
       if (!isLiked) {

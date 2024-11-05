@@ -30,11 +30,11 @@ const ImageSlider = ({ images, onSlideChange }: ImageSliderProps) => {
 
   const nextSlide = useCallback(() => {
     handleSlideChange((currentSlide + 1) % images.length)
-  }, [currentSlide, handleSlideChange])
+  }, [currentSlide, handleSlideChange, images.length])
 
   const prevSlide = useCallback(() => {
     handleSlideChange((currentSlide - 1 + images.length) % images.length)
-  }, [currentSlide, handleSlideChange])
+  }, [currentSlide, handleSlideChange, images.length])
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX)
@@ -69,8 +69,19 @@ const ImageSlider = ({ images, onSlideChange }: ImageSliderProps) => {
     return undefined
   }, [nextSlide, isTouching])
 
+  useEffect(() => {
+    if (currentSlide >= 0 && images[currentSlide]) {
+      onSlideChange?.(images[currentSlide].id)
+    }
+  }, [currentSlide, images, onSlideChange])
+
   return (
-    <div className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl mb-16">
+    <div 
+      className="relative w-full max-w-5xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl mb-16"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background blur layer */}
       {images.map((image, index) => (
         <div

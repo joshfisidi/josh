@@ -48,12 +48,14 @@ export default function Home() {
         onSlideChange={setCurrentImageId} 
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full max-w-md">
-        <LikeButton 
-          imageId={currentImageId}
-          onLike={(likes: number) => {
-            console.log(`Image ${currentImageId} now has ${likes} likes`)
-          }}
-        />
+        {currentImageId && (
+          <LikeButton 
+            imageId={currentImageId}
+            onLike={(likes: number) => {
+              console.log(`Image ${currentImageId} now has ${likes} likes`)
+            }}
+          />
+        )}
         <UploadButton onUploadSuccess={handleUploadSuccess} />
       </div>
     </main>
