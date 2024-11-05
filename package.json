@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.21.1",
     "@shadcn/ui": "^0.0.4",
     "autoprefixer": "^10.4.20",
     "next": "15.0.2",
+    "prisma": "^5.21.1",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028"
   },

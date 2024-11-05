@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  imageId   String
+  createdAt DateTime @default(now())
+
+  @@index([imageId])
+} 
